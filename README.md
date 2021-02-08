@@ -4,11 +4,11 @@ Phpy allows you to simply execute Python scripts from your PHP code and read the
 ## Usage
 Please note that Phpy does not currently support Microsoft Windows.
 
-First, install Phpy using composer:
+Phpy can be installed using composer:
 
 `$ composer require vafakaramzadegan/phpy`
 
-and then include it in your php script:
+after installation, include it in your php script:
 
 ```php
 <?php
@@ -29,7 +29,8 @@ $py->set_python_scripts_dir("/path/to/your/python/scripts")->
 ```
 
 Assuming that the directory `/home/YourUserName/Documents/python_scripts` exists on your computer, the `www-data` user must have access to read and execute python scripts inside it.
-now, create a python file inside the directory. let's call it `test_python.py` and paste the following code inside it:
+
+now, create a python file inside the directory and paste the following code in it. let's call it `test_python.py`:
 
 ```python
 import sys
@@ -66,7 +67,9 @@ Array
 
 ## Options
 You can have extra control on how your python scripts are executed.
-by default, Phpy executes python scripts synchronously, but it has the ability to execute scripts in the background.
+by default, Phpy executes python scripts synchronously, which means that PHP waits for your python scripts to finish execution.
+
+however, it has the ability to execute scripts in the background.
 all you have to do is:
 
 ```php
@@ -83,13 +86,13 @@ echo $py->
 whenever a script is set to run in the background, the result of `execute()` becomes a unique identifier number. 
 for example: `1612798795670`.
 
-you can store this number in your database or in session, and use it to retrieve the output:
+you can store this number in your database or in session, and use it later to retrieve the output:
 ```php
 $py = new Phpy();
 echo $py->get_exec_result(1612798795670);
 ```
 
-The output would be:
+The output of the above code would be:
 ```html
 Array
 (
