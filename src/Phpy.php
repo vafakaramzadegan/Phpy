@@ -57,7 +57,7 @@ class Phpy{
     /* set nohup output directory.
        MAKE SURE "www-data" HAS PERMISSION to ACCESS and WRITE
        to the directory. */
-    public function set_nohup_output_dir($dir){
+    public function set_output_dir($dir){
         $this->nohup_out_dir = $dir;
 
         return $this;
