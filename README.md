@@ -1,14 +1,15 @@
 # Phpy
-Phpy allows you to simply execute Python scripts from your PHP code and read the output.
+Phpy lets you simply execute Python script files from your PHP code and read the output.
 
-## Usage
+## Installation
 Please note that Phpy does not currently support Microsoft Windows.
 
+### Install using composer
 Phpy can be installed using composer:
 
 `$ composer require vafakaramzadegan/phpy`
 
-after installation, include it in your php script:
+just include the autoloader after installation:
 
 ```php
 <?php
@@ -19,7 +20,19 @@ use Vafakaramzadegan\Phpy;
 
 ```
 
-You can execute your python scripts now:
+### Manual installation
+You can also use Phpy without composer:
+```php
+<?php
+
+require("Phpy.php");
+
+use Vafakaramzadegan\Phpy;
+
+```
+
+## Usage
+Using Phpy is easy. set scripts directory, select your script file, and pass the arguments to it:
 
 ```php
 $py = new Phpy();
@@ -28,9 +41,9 @@ $py->set_python_scripts_dir("/path/to/your/python/scripts")->
      execute("python_script_filename_without_extension", ["array", "of", "arguments"]);
 ```
 
-Assuming that the directory `/home/YourUserName/Documents/python_scripts` exists on your computer, the `www-data` user must have access to read and execute python scripts inside it.
+Assuming that the directory `/home/YourUserName/Documents/python_scripts` exists on your computer, the `www-data` user must have access to read and execute python scripts inside the directory. you have to set the permissions manually.
 
-now, create a python file inside the directory and paste the following code in it. let's call it `test_python.py`:
+create a python file inside the directory and paste the following code into it. let's call it `test_python.py`:
 
 ```python
 import sys
@@ -49,8 +62,10 @@ use Vafakaramzadegan\Phpy;
 
 $py = new Phpy();
 
-echo print_r($py->set_python_scripts_dir("/home/YourUserName/Documents/python_scripts")->
-     execute("test_python", ["arg1", "arg2", "arg3"]));
+echo print_r(
+    $py->set_python_scripts_dir("/home/YourUserName/Documents/python_scripts")->
+    execute("test_python", ["arg1", "arg2", "arg3"])
+);
 ```
 
 The result would be:
@@ -66,7 +81,17 @@ Array
 ```
 
 ## Options
-You can have extra control on how your python scripts are executed.
+You can have extra control over how your python scripts are executed. Phpy provides methods and options to meet your demands.
+
+### Select Python version
+You may select the desired Python version.
+```php
+   // Python2 - probably shipped with your OS
+   $py->set_python_version(2);
+   // Python3 - should be installed prior to use
+   $py->set_python_version(3);
+```
+### Asynchronous execution
 by default, Phpy executes python scripts synchronously, which means that PHP waits for your python scripts to finish execution.
 
 however, it has the ability to execute scripts in the background.
@@ -83,13 +108,12 @@ echo $py->
     execute("test_python", ["arg1", "arg2", "arg3"]);
 ```
 
-whenever a script is set to run in the background, the result of `execute()` becomes a unique identifier number. 
-for example: `1612798795670`.
+whenever a script is set to run in the background, the result of `execute()` becomes a unique identifier number like `1612798795670`.
 
-you can store this number in your database or in session, and use it later to retrieve the output:
+you can store this number in your database or session, and use it later to retrieve the output:
 ```php
 $py = new Phpy();
-echo $py->get_exec_result(1612798795670);
+echo print_r($py->get_exec_result(1612798795670));
 ```
 
 The output of the above code would be:
@@ -102,4 +126,11 @@ Array
     [3] => 3 arg3
 )
 1
+```
+The outputs are cached on disk. make sure to empty the cache periodically:
+```php
+$py->
+set_nohup_output_dir("/home/YourUserName/Documents/python_scripts/output")->
+// delete cache files prior to an hour ago
+flush_outputs(3600);
 ```
