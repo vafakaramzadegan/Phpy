@@ -102,7 +102,7 @@ echo $py->
     // the path to python scripts
     set_python_scripts_dir("/home/YourUserName/Documents/python_scripts")
     // the directory where the output of python script will be stored after execution finished
-    set_nohup_output_dir("/home/YourUserName/Documents/python_scripts/output")
+    set_output_dir("/home/YourUserName/Documents/python_scripts/output")
     // keep the script running after the execution of php script is finished
     run_in_background(true)->
     execute("test_python", ["arg1", "arg2", "arg3"]);
@@ -130,7 +130,7 @@ Array
 The outputs are cached on disk. make sure to empty the cache periodically:
 ```php
 $py->
-set_nohup_output_dir("/home/YourUserName/Documents/python_scripts/output")->
+set_output_dir("/home/YourUserName/Documents/python_scripts/output")->
 // delete cache files prior to an hour ago
 flush_outputs(3600);
 ```
