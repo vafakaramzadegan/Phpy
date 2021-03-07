@@ -27,12 +27,13 @@ You can also use Phpy without composer:
 
 require("Phpy.php");
 
+# you can also remove namespace in Phpy.php file
 use Vafakaramzadegan\Phpy;
 
 ```
 
 ## Usage
-Using Phpy is easy. set scripts directory, select your script file, and pass the arguments to it:
+Using Phpy is easy. set scripts directory, select your Python script file, and pass the arguments if present:
 
 ```php
 $py = new Phpy();
@@ -41,9 +42,12 @@ $py->set_python_scripts_dir("/path/to/your/python/scripts")->
      execute("python_script_filename_without_extension", ["array", "of", "arguments"]);
 ```
 
-Assuming that the directory `/home/YourUserName/Documents/python_scripts` exists on your computer, the `www-data` user must have access to read and execute python scripts inside the directory. you have to set the permissions manually.
+Assuming that the directory `/home/YourUserName/Documents/python_scripts` exists on your computer, the `www-data` user must have access to `read` and `execute` python scripts inside the directory. The permissions have to be set manually.
 
-create a python file inside the directory and paste the following code into it. let's call it `test_python.py`:
+## Simple example
+start by creating a python file inside the directory. let's call it `test_python.py`.
+
+paste the following code into the file:
 
 ```python
 import sys
@@ -56,10 +60,6 @@ for index, arg in enumerate(sys.argv[1:]):
 now, in your PHP script:
 
 ```php
-require("vendor/autoload.php");
-
-use Vafakaramzadegan\Phpy;
-
 $py = new Phpy();
 
 echo print_r(
@@ -81,7 +81,7 @@ Array
 ```
 
 ## Options
-You can have extra control over how your python scripts are executed. Phpy provides methods and options to meet your demands.
+You can have extra control over how your python script is executed. Phpy provides methods and options to meet your demands.
 
 ### Select Python version
 You may select the desired Python version.
@@ -92,9 +92,9 @@ You may select the desired Python version.
    $py->set_python_version(3);
 ```
 ### Asynchronous execution
-by default, Phpy executes python scripts synchronously, which means that PHP waits for your python scripts to finish execution.
+by default, Phpy executes python scripts synchronously, which means that PHP waits for your python script to finish execution.
 
-however, it has the ability to execute scripts in the background.
+however, Phpy has the ability to execute scripts in the background. 
 all you have to do is:
 
 ```php
@@ -108,8 +108,7 @@ echo $py->
     execute("test_python", ["arg1", "arg2", "arg3"]);
 ```
 
-whenever a script is set to run in the background, the result of `execute()` becomes a unique identifier number like `1612798795670`.
-
+whenever a Python file is set to run in the background, the PHP script does not wait for it to complete. instead, `execute()` command returns a unique identifier number like `1612798795670`.
 you can store this number in your database or session, and use it later to retrieve the output:
 ```php
 $py = new Phpy();
@@ -127,9 +126,10 @@ Array
 )
 1
 ```
-The outputs are cached on disk. make sure to empty the cache periodically:
+The outputs are cached on disk. so make sure to empty the cache periodically:
 ```php
 $py->
+# output directory must be set
 set_output_dir("/home/YourUserName/Documents/python_scripts/output")->
 // delete cache files prior to an hour ago
 flush_outputs(3600);
